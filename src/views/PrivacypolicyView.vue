@@ -1,8 +1,6 @@
 <template>
   <div class="">
-    <div class="logo-wrapper">
-      <img src="../assets/images/logo.svg" alt="WYCIWYG - What you code is what you get" />
-    </div>
+    <LargeLogoComponent />
 
     <div class="privacy-policy">
       <h1>Privacy Policy</h1>
@@ -17,16 +15,11 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import LargeLogoComponent from '@/components/LargeLogoComponent.vue'
+</script>
 
 <style scoped>
-.logo-wrapper {
-  display: flex;
-  padding-top: 40px;
-  padding-bottom: 60px;
-  justify-content: center;
-}
-
 .privacy-policy {
   display: flex;
   flex-direction: column;
