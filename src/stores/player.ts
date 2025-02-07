@@ -4,7 +4,7 @@ interface State {
   name: string
   email: string
   phoneNumber: string
-  personvernerklaering: boolean
+  privacyPolicy: boolean
 }
 
 export const usePlayerStore = defineStore('player', {
@@ -13,7 +13,7 @@ export const usePlayerStore = defineStore('player', {
       name: '',
       email: '',
       phoneNumber: '',
-      personvernerklaering: false,
+      privacyPolicy: false,
     }
   },
   actions: {
@@ -26,8 +26,8 @@ export const usePlayerStore = defineStore('player', {
     setPhoneNumber(phoneNumber: string) {
       this.phoneNumber = phoneNumber
     },
-    setPersonvernerklaering(personvernerklaering: boolean) {
-      this.personvernerklaering = personvernerklaering
+    setprivacyPolicy(privacyPolicy: boolean) {
+      this.privacyPolicy = privacyPolicy
     },
   },
 })
