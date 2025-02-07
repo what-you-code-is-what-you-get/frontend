@@ -5,6 +5,7 @@ import { client } from '@/utils/client.ts'
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
 
 import ButtonComponent from '@/components/ButtonComponent.vue'
+import LargeLogoComponent from '@/components/LargeLogoComponent.vue'
 
 const gamePin = ref<string | null>(null)
 const errorMsg = ref<string | null>(null)
@@ -44,9 +45,7 @@ async function findChallengeId() {
 
 <template>
   <main>
-    <div class="logo-wrapper">
-      <img src="@/assets/images/logo.svg" alt="WYCIWYG - What you code is what you get" />
-    </div>
+    <LargeLogoComponent />
 
     <div class="flex">
       <div class="info">
