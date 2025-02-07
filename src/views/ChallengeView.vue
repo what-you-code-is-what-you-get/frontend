@@ -46,19 +46,21 @@ onBeforeMount(() => {
 })
 </script>
 <template>
-  <div v-if="!playerStore.name">
-    <IntroComponent />
-  </div>
-  <div v-else>
-    <header>
-      <router-link to="/">Back</router-link>
-      <div class="iconName-Wrapper">
-        <!-- <img v-if="challenge.practice" src="../assets/images/figur1.svg" alt="Figur" class="figur1" />-->
-        <img src="../assets/images/figur2.svg" alt="Figur" class="figur2" />
-        <h1>{{ challengeStore.challenge?.title }}</h1>
-      </div>
-    </header>
-  </div>
+  <main>
+    <div v-if="!playerStore.name">
+      <IntroComponent />
+    </div>
+    <div v-else>
+      <header>
+        <router-link to="/">Back</router-link>
+        <div class="iconName-Wrapper">
+          <!-- <img v-if="challenge.practice" src="../assets/images/figur1.svg" alt="Figur" class="figur1" />-->
+          <img src="../assets/images/figur2.svg" alt="Figur" class="figur2" />
+          <h1>{{ challengeStore.challenge?.title }}</h1>
+        </div>
+      </header>
+    </div>
+  </main>
 </template>
 <style scoped>
 header {
