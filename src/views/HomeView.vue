@@ -14,11 +14,6 @@ async function findChallengeId() {
   if (gamePin.value) {
     loading.value = true
     try {
-      /*  const challenge = await client.getResource(
-        'node--challenge',
-        '907958bb-4344-4e80-b28c-839b3b626c3e',
-        { queryString: 'include=field_reference_image.thumbnail' },
-      ) */
       const apiParams = new DrupalJsonApiParams()
       const queryString = apiParams
         .addFilter('field_game_pin', gamePin.value, '=')
