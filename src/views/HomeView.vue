@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import router from '@/router'
-import { client } from '@/utils/client.ts'
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
-
+// Utils
+import { client } from '@/utils/client.ts'
+// Components
 import ButtonComponent from '@/components/ButtonComponent.vue'
 import LargeLogoComponent from '@/components/LargeLogoComponent.vue'
-
+// Interfaces
+import type { ChallengeArray } from '@/interfaces/ChallengeArray'
+// Variables
 const gamePin = ref<string | null>(null)
 const errorMsg = ref<string | null>(null)
 const loading = ref<boolean>(false)
@@ -20,11 +23,14 @@ async function findChallengeId() {
         .addFilter('field_game_pin', gamePin.value, '=')
         .addFields('node--challenge', ['id'])
         .getQueryString()
-      const challenge: any = await client.getCollection('node--challenge', {
+      const response = (await client.getCollection('node--challenge', {
         queryString: queryString,
-      })
+      })) as { data: ChallengeArray }
+      const challenge: ChallengeArray = response.data
 
       if (challenge.length > 0) {
+        console.log(challenge)
+
         if (challenge) {
           router.push({
             name: 'Challenge',
