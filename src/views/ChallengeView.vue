@@ -32,8 +32,6 @@ async function getChallengeById(id: string) {
     })
 
     if (respons) {
-      console.log('respons', respons)
-
       challengeStore.setChallenge(respons as Challenge)
     } else {
       errorMsg.value = 'Found no challenge with that Game pin'
@@ -59,11 +57,17 @@ onBeforeMount(() => {
       <header>
         <router-link to="/">Back</router-link>
         <div class="iconName-Wrapper">
-          <!-- <img v-if="challenge.practice" src="../assets/images/figur1.svg" alt="Figur" class="figur1" />-->
-          <img src="../assets/images/figur2.svg" alt="Figur" class="figur2" />
+          <img
+            v-if="challengeStore.challenge?.field_game_pin === 'PRACTICE'"
+            src="../assets/images/figur1.svg"
+            alt="Figur"
+            class="figur1"
+          />
+          <img v-else src="../assets/images/figur2.svg" alt="Figur" class="figur2" />
           <h1>{{ challengeStore.challenge?.title }}</h1>
         </div>
       </header>
+      Game Started
     </div>
   </main>
 </template>
