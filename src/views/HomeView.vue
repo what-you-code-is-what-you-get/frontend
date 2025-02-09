@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import router from '@/router'
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
 // Utils
 import { client } from '@/utils/client.ts'
+// Stores
+import { useChallengeStore } from '@/stores/challenge'
+import { usePlayerStore } from '@/stores/player'
 // Components
 import ButtonComponent from '@/components/ButtonComponent.vue'
 import LargeLogoComponent from '@/components/LargeLogoComponent.vue'
 // Interfaces
-import type { ChallengeArray } from '@/interfaces/ChallengeArray'
+//import type { ChallengeArray } from '@/interfaces/ChallengeArray'
+// Init stores
+const challengeStore = useChallengeStore()
+const playerStore = usePlayerStore()
 // Variables
 const gamePin = ref<string | null>(null)
 const errorMsg = ref<string | null>(null)
@@ -23,14 +29,11 @@ async function findChallengeId() {
         .addFilter('field_game_pin', gamePin.value, '=')
         .addFields('node--challenge', ['id'])
         .getQueryString()
-      const response = (await client.getCollection('node--challenge', {
+      const challenge: any = await client.getCollection('node--challenge', {
         queryString: queryString,
-      })) as { data: ChallengeArray }
-      const challenge: ChallengeArray = response.data
+      })
 
       if (challenge.length > 0) {
-        console.log(challenge)
-
         if (challenge) {
           router.push({
             name: 'Challenge',
@@ -47,6 +50,10 @@ async function findChallengeId() {
     }
   }
 }
+onBeforeMount(() => {
+  challengeStore.$reset()
+  playerStore.$reset()
+})
 </script>
 
 <template>
