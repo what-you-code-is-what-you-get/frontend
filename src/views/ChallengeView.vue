@@ -1,18 +1,23 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { onBeforeMount, ref } from 'vue'
-import { client } from '@/utils/client.ts'
-import type { Challenge } from '@/interfaces/Challenge'
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
+// Utils
+import { client } from '@/utils/client.ts'
+// Interfaces
+import type { Challenge } from '@/interfaces/Challenge'
+// Components
 import IntroComponent from '@/components/IntroComponent.vue'
+// Stores
 import { useChallengeStore } from '@/stores/challenge'
 import { usePlayerStore } from '@/stores/player'
 
 const route = useRoute()
 const apiParams = new DrupalJsonApiParams()
+// Init stores
 const challengeStore = useChallengeStore()
 const playerStore = usePlayerStore()
-
+// Variables
 const errorMsg = ref<string | null>(null)
 const loading = ref<boolean>(false)
 
