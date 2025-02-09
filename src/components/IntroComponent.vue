@@ -1,30 +1,43 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+// Utils
+import { validatePlayerInfoConf } from '@/utils/validatePlayerInfoConf'
+// Stores
 import { useChallengeStore } from '@/stores/challenge'
 import { usePlayerStore } from '@/stores/player'
+// Components
 import LargeLogoComponent from '@/components/LargeLogoComponent.vue'
-
+import ButtonComponent from './ButtonComponent.vue'
+// Init stores
 const challengeStore = useChallengeStore()
 const playerStore = usePlayerStore()
-
+// Variables
 const name = ref<string>('')
 const email = ref<string>('')
-const phone = ref<string>('')
+const phoneNumber = ref<string>('')
 const privacyPolicyChecked = ref<boolean>(false)
 const errorMsg = ref<string | null>(null)
+const formValid = ref<boolean>(false)
 
 async function startGame() {
-  if (!name.value || !email.value || !phone.value || !privacyPolicyChecked.value) {
-    errorMsg.value = 'Vennligst fyll ut alle påkrevde feltene.'
+  formValid.value = await validatePlayerInfoConf(
+    name.value,
+    email.value,
+    phoneNumber.value,
+    privacyPolicyChecked.value,
+  )
+  if (!formValid.value) {
+    errorMsg.value = 'Please fill out all required fields'
     return
   }
+  errorMsg.value = null
   await setPlayerInfo()
 }
 
 async function setPlayerInfo() {
   playerStore.setName(name.value)
   playerStore.setEmail(email.value)
-  playerStore.setPhoneNumber(phone.value)
+  playerStore.setPhoneNumber(phoneNumber.value)
   playerStore.setprivacyPolicy(privacyPolicyChecked.value)
 }
 </script>
@@ -38,6 +51,9 @@ async function setPlayerInfo() {
         <div v-html="challengeStore.challenge?.field_introduction_text.processed"></div>
         <p>PS! You only have {{ challengeStore.challenge?.field_time }} minutes.</p>
       </div>
+      <span class="errorMsg" v-if="errorMsg">
+        {{ errorMsg }}<span class="required-star">*</span>
+      </span>
       <div class="wrapper">
         <label for="name">Name<span class="required-star">*</span></label>
         <input type="text" name="Game pin" v-model="name" required />
@@ -47,23 +63,22 @@ async function setPlayerInfo() {
         </div>
         <div v-if="challengeStore.challenge?.field_phone_checkbox">
           <label for="phone">Phone<span class="required-star">*</span></label>
-          <input type="tel" name="Game pin" v-model="phone" required />
+          <input type="tel" name="Game pin" v-model="phoneNumber" required />
         </div>
 
-        <label class="container personverner">
+        <label class="container privacy-policy">
           <p>
             <span class="required-star">*</span>
             I agree that my personal data will be stored until the competition has ended. The
             information will only be used to contact you as a potential winner of the competition.
+            <br />
             <RouterLink to="/privacy-policy" target="_blank">Privacy Policy</RouterLink>
           </p>
           <input type="checkbox" id="checkbox" v-model="privacyPolicyChecked" required />
           <span class="checkmark"></span>
         </label>
 
-        <span class="errorMsg" v-if="errorMsg">{{ errorMsg }}</span>
-
-        <button @click="startGame">START</button>
+        <ButtonComponent text="START" color="orange" @emitFunction="startGame" />
       </div>
     </div>
   </div>
@@ -77,13 +92,6 @@ async function setPlayerInfo() {
 .info {
   max-width: 800px;
   margin-bottom: 30px;
-}
-h1 {
-  font-size: 28px;
-}
-
-h1 span {
-  color: var(--color-bv-green);
 }
 .flex {
   display: flex;
@@ -120,7 +128,7 @@ input[type='email'] {
   padding: 20px;
   width: 100%;
   color: var(--color-bv-green);
-  font-size: 40px;
+  font-size: var(--step-4);
   line-height: 1;
   margin-bottom: 20px;
 
@@ -138,46 +146,28 @@ input[type='checkbox'] {
 }
 
 .errorMsg {
-  margin-top: 40px;
+  margin-top: 20px;
   margin-bottom: 10px;
-  font-size: 30px;
-  color: var(--color-bv-orange);
+  font-size: var(--step-3);
+  color: var(--color-bv-green);
+  display: flex;
+
+  .required-star {
+    color: var(--color-bv-orange);
+    margin-left: 5px;
+    font-size: var(--step-2);
+  }
 }
 
 label {
-  font-size: 20px;
-  line-height: 28px;
+  font-size: var(--step-2);
   color: var(--color-text-color);
-  margin-bottom: 10px;
   display: flex;
 
   .required-star {
     color: var(--color-bv-orange);
     margin-left: 5px;
     font-size: 25px;
-  }
-}
-
-button {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  background-color: var(--color-bv-orange);
-  color: var(--color-text-color-dark);
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 26px;
-  border: 2px solid var(--color-bv-orange);
-  padding: 20px;
-
-  &:hover,
-  &:focus {
-    background-color: var(--color-bv-dark-orange);
-  }
-
-  &:active {
-    background-color: var(--color-text-color-dark);
-    color: var(--color-bv-orange);
-    border: 2px solid var(--color-bv-orange);
   }
 }
 
@@ -214,7 +204,7 @@ button {
   background-color: #eee;
 }
 
-.personverner .checkmark {
+.privacy-policy .checkmark {
   top: 10px;
 }
 
