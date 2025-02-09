@@ -20,12 +20,18 @@ const errorMsg = ref<string | null>(null)
 const formValid = ref<boolean>(false)
 
 async function startGame() {
-  formValid.value = await validatePlayerInfoConf(
-    name.value,
-    email.value,
-    phoneNumber.value,
-    privacyPolicyChecked.value,
-  )
+  if (challengeStore.challenge?.field_game_mode.name === 'Conference mode') {
+    formValid.value = await validatePlayerInfoConf(
+      name.value,
+      email.value,
+      phoneNumber.value,
+      privacyPolicyChecked.value,
+    )
+  }
+  if (challengeStore.challenge?.field_game_mode.name === 'Multiplayer mode') {
+    formValid.value = name.value.length > 0
+  }
+
   if (!formValid.value) {
     errorMsg.value = 'Please fill out all required fields'
     return
@@ -43,8 +49,9 @@ async function setPlayerInfo() {
 </script>
 
 <template>
-  <LargeLogoComponent />
-
+  <router-link to="/">
+    <LargeLogoComponent />
+  </router-link>
   <div v-if="challengeStore.challenge?.field_game_mode.name === 'Conference mode'">
     <div class="flex">
       <div class="info">
@@ -84,7 +91,21 @@ async function setPlayerInfo() {
   </div>
 
   <div v-else-if="challengeStore.challenge?.field_game_mode.name === 'Multiplayer mode'">
-    <h2>Multiplayer mode intro</h2>
+    <div class="flex">
+      <div class="info">
+        <div v-html="challengeStore.challenge?.field_introduction_text.processed"></div>
+        <p>PS! You only have {{ challengeStore.challenge?.field_time }} minutes.</p>
+      </div>
+      <span class="errorMsg" v-if="errorMsg">
+        {{ errorMsg }}<span class="required-star">*</span>
+      </span>
+      <div class="wrapper">
+        <label for="name">Name<span class="required-star">*</span></label>
+        <input type="text" name="Game pin" v-model="name" required />
+
+        <ButtonComponent text="START" color="orange" @emitFunction="startGame" />
+      </div>
+    </div>
   </div>
 </template>
 
