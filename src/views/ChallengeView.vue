@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
 // Utils
 import { client } from '@/utils/client.ts'
@@ -8,6 +8,8 @@ import { client } from '@/utils/client.ts'
 import type { Challenge } from '@/interfaces/Challenge'
 // Components
 import IntroComponent from '@/components/IntroComponent.vue'
+import Reference from '@/components/ReferenceComponent.vue'
+import Instructions from '@/components/InstructionsComponent.vue'
 // Stores
 import { useChallengeStore } from '@/stores/challenge'
 import { usePlayerStore } from '@/stores/player'
@@ -20,10 +22,56 @@ const playerStore = usePlayerStore()
 // Variables
 const errorMsg = ref<string | null>(null)
 const loading = ref<boolean>(false)
+const finishedTimer = ref<boolean>(false)
+const timeLeft = ref<number>(0)
+
+const formattedTime = computed(() => {
+  if (timeLeft.value < 60) {
+    return timeLeft.value
+  } else {
+    const minutes = Math.floor(timeLeft.value / 60)
+    const seconds = timeLeft.value % 60
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+  }
+})
+
+const startTimer = () => {
+  countdown()
+}
+
+const countdown = () => {
+  if (finishedTimer.value) return
+
+  if (timeLeft.value > 0) {
+    setTimeout(() => {
+      timeLeft.value--
+      countdown()
+    }, 1000)
+  } else {
+    timeUp()
+  }
+}
+
+const isPulsating = computed(() => timeLeft.value < 30)
+
+const timeUp = () => {
+  console.log('Time is up!')
+  /* if (finishedConfirmation.value && finishedConfirmation.value.showResult) {
+    finishedConfirmation.value.showResult()
+  } */
+}
+
+const stopTimer = () => {
+  finishedTimer.value = true
+}
 
 async function getChallengeById(id: string) {
   const queryString = apiParams
-    .addInclude(['field_reference_image.thumbnail', 'field_game_mode.vid'])
+    .addInclude([
+      'field_reference_image.thumbnail',
+      'field_game_mode.vid',
+      'field_assets.thumbnail',
+    ])
     .getQueryString()
 
   try {
@@ -32,6 +80,8 @@ async function getChallengeById(id: string) {
     })
 
     if (respons) {
+      console.log('respons', respons)
+
       challengeStore.setChallenge(respons as Challenge)
     } else {
       errorMsg.value = 'Found no challenge with that Game pin'
@@ -46,6 +96,7 @@ async function getChallengeById(id: string) {
 onBeforeMount(() => {
   const challengeId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
   getChallengeById(challengeId)
+  timeLeft.value = challengeStore.challenge?.field_time || 0
 })
 </script>
 <template>
@@ -56,6 +107,13 @@ onBeforeMount(() => {
     <div v-else>
       <header>
         <router-link to="/">Back</router-link>
+        <div
+          v-if="challengeStore.challenge?.field_game_mode.name === 'Conference mode'"
+          class="timer"
+        >
+          <span>Time left:</span>
+          <span :class="['time', { pulsating: isPulsating }]">{{ formattedTime }}</span>
+        </div>
         <div class="iconName-Wrapper">
           <img
             v-if="challengeStore.challenge?.field_game_pin === 'PRACTICE'"
@@ -67,7 +125,33 @@ onBeforeMount(() => {
           <h1>{{ challengeStore.challenge?.title }}</h1>
         </div>
       </header>
-      Game Started
+      <div class="wrapper">
+        <!-- <MonacoEditor
+        v-bind:challengeID="challenge.id"
+        @combo-update="comboUpdate"
+      /> -->
+      </div>
+
+      <div class="name">
+        {{ playerStore.name }}
+      </div>
+      <div class="button-container">
+        <Reference />
+        <Instructions ref="instructions" @close-instructions="startTimer" />
+        <!-- <ResultViewer v-if="challenge.practice" :challengeID="challenge.id" /> -->
+        <!-- <FinishedConfirmation
+        ref="finishedConfirmation"
+        v-if="!challenge.practice"
+        :challengeID="challenge.id"
+        :imageUrl="challenge.image_url"
+        @stop-timer="stopTimer"
+      /> -->
+      </div>
+      <!-- <Combo
+      :value="combo"
+      :challengeID="challenge.id"
+      :resultID="playerInfoStore.name"
+    /> -->
     </div>
   </main>
 </template>
@@ -97,6 +181,39 @@ header {
     }
   }
 
+  .timer {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    span {
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 32px;
+    }
+    .time {
+      font-weight: 700;
+      font-size: 3em;
+      transition: font-size 0.5s ease;
+    }
+    .pulsating {
+      font-size: 3.5em;
+      color: var(--color-bv-orange);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  }
+
   .iconName-Wrapper {
     display: flex;
 
@@ -115,5 +232,31 @@ header {
       margin-left: 20px;
     }
   }
+}
+
+.wrapper {
+  display: flex;
+}
+
+.name {
+  background-color: var(--color-bv-blue);
+  bottom: 0;
+  color: var(--color-bv-green);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 53px;
+  padding: 25px 70px;
+  position: absolute;
+  margin: 20px;
+}
+
+.button-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 30px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
 }
 </style>
