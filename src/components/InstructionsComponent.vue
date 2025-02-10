@@ -119,7 +119,7 @@ onBeforeUnmount(() => {
     .content {
       font-size: var(--step-0);
       padding: 20px 100px 20px;
-      overflow-y: scroll;
+      overflow-y: auto;
       .text {
         margin-bottom: 20px;
       }
