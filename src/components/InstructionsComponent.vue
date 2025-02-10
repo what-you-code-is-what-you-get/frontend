@@ -55,8 +55,6 @@ onBeforeUnmount(() => {
   <div ref="instructionsContainer" class="instructions">
     <div v-if="!firstTimeInstructions" class="blocker" :onClick="close"></div>
     <div class="wrapper">
-      <!-- <span v-if="!firstTimeInstructions" class="close" :onClick="close">Close</span> -->
-
       <div class="content">
         <div v-html="challengeStore.challenge?.field_instructions.processed" class="text"></div>
         <div class="assets">
@@ -139,73 +137,10 @@ onBeforeUnmount(() => {
         }
       }
     }
-
-    /* The Close Button */
-    /*   .close {
-      align-self: end;
-      color: var(--color-bv-green);
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 20px;
-      line-height: 26px;
-      margin-top: 35px;
-      margin-right: 55px;
-      padding: 10px 15px;
-
-      &:hover,
-      &:focus {
-        background-color: rgba(30, 30, 30, 0.1);
-        text-decoration: underline;
-      }
-
-      &:active {
-        background-color: var(--color-text-color-dark);
-        color: var(--color-bv-citrine-white);
-      }
-    } */
   }
 
   button {
     margin: 0;
   }
 }
-
-/* button {
-  background-color: var(--color-bv-blue);
-  color: var(--color-bv-green);
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 26px;
-  border: 2px solid var(--color-bv-blue);
-
-  &:hover {
-    background: linear-gradient(0deg, rgba(121, 254, 157, 0.2), rgba(121, 254, 157, 0.2)),
-      var(--color-bv-blue);
-  }
-
-  &:active {
-    background-color: var(--color-bv-green);
-    color: var(--color-bv-blue);
-    border: 2px solid var(--color-bv-blue);
-  }
-}
-
-button.start {
-  background-color: var(--color-bv-orange);
-  color: var(--color-text-color-dark);
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 26px;
-  border: 2px solid var(--color-bv-orange);
-
-  &:hover {
-    background-color: var(--color-bv-dark-orange);
-  }
-
-  &:active {
-    background-color: var(--color-text-color-dark);
-    color: var(--color-bv-orange);
-    border: 2px solid var(--color-bv-orange);
-  }
-} */
 </style>
