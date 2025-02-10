@@ -31,7 +31,31 @@ interface Uid {
 interface FieldAsset {
   type: string
   id: string
+  drupal_internal__mid: number
+  drupal_internal__vid: number
+  langcode: string
+  revision_created: string
+  status: boolean
+  name: string
+  created: string
+  changed: string
+  default_langcode: boolean
+  revision_translation_affected: boolean
+  path: Path
+  links: Links
   resourceIdObjMeta: ResourceIdObjMeta
+  bundle: {
+    type: string
+    id: string
+    resourceIdObjMeta: {
+      drupal_internal__target_id: string
+    }
+  }
+  revision_user: null
+  uid: Uid
+  thumbnail: Thumbnail
+  field_media_image: Thumbnail
+  relationshipNames: string[]
 }
 
 interface FieldGameMode {
