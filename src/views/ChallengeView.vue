@@ -10,6 +10,8 @@ import type { Challenge } from '@/interfaces/Challenge'
 import IntroComponent from '@/components/IntroComponent.vue'
 import Reference from '@/components/ReferenceComponent.vue'
 import Instructions from '@/components/InstructionsComponent.vue'
+import MonacoEditor from '@/components/MonacoEditor.vue'
+import Combo from '@/components/ComboComponent.vue'
 // Stores
 import { useChallengeStore } from '@/stores/challenge'
 import { usePlayerStore } from '@/stores/player'
@@ -24,6 +26,8 @@ const errorMsg = ref<string | null>(null)
 const loading = ref<boolean>(false)
 const finishedTimer = ref<boolean>(false)
 const timeLeft = ref<number>(0)
+const combo = ref<number>(0)
+const comboTimer = ref<number>(0)
 
 const formattedTime = computed(() => {
   if (timeLeft.value < 60) {
@@ -65,6 +69,14 @@ const stopTimer = () => {
   finishedTimer.value = true
 }
 
+const comboUpdate = () => {
+  combo.value++
+  clearTimeout(comboTimer.value)
+  comboTimer.value = setTimeout(() => {
+    combo.value = 0
+  }, 10000)
+}
+
 async function getChallengeById(id: string) {
   const queryString = apiParams
     .addInclude([
@@ -80,7 +92,7 @@ async function getChallengeById(id: string) {
     })
 
     if (respons) {
-      console.log('respons', respons)
+      /* console.log('respons', respons) */
 
       challengeStore.setChallenge(respons as Challenge)
     } else {
@@ -126,10 +138,7 @@ onBeforeMount(() => {
         </div>
       </header>
       <div class="wrapper">
-        <!-- <MonacoEditor
-        v-bind:challengeID="challenge.id"
-        @combo-update="comboUpdate"
-      /> -->
+        <MonacoEditor @combo-update="comboUpdate" />
       </div>
 
       <div class="name">
@@ -147,11 +156,7 @@ onBeforeMount(() => {
         @stop-timer="stopTimer"
       /> -->
       </div>
-      <!-- <Combo
-      :value="combo"
-      :challengeID="challenge.id"
-      :resultID="playerInfoStore.name"
-    /> -->
+      <Combo :value="combo" />
     </div>
   </main>
 </template>
