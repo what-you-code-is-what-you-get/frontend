@@ -16,7 +16,7 @@ button {
   display: flex;
   font-size: var(--step-2);
   justify-content: center;
-  padding: 20px 0;
+  padding: 20px;
   width: 100%;
   border: 6px solid var(--dark-gray);
   transition: 0.5s;
