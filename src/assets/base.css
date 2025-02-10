@@ -51,6 +51,11 @@
   font-weight: 100 1000;
 }
 
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('./fonts/PressStart2P-Regular.ttf');
+}
+
 body {
   min-height: 100vh;
   color: var(--color-text-color);
