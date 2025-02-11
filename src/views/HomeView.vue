@@ -7,6 +7,7 @@ import { client } from '@/utils/client.ts'
 // Stores
 import { useChallengeStore } from '@/stores/challenge'
 import { usePlayerStore } from '@/stores/player'
+import { useEditorStore } from '@/stores/editor'
 // Components
 import ButtonComponent from '@/components/ButtonComponent.vue'
 import LargeLogoComponent from '@/components/LargeLogoComponent.vue'
@@ -15,6 +16,7 @@ import LargeLogoComponent from '@/components/LargeLogoComponent.vue'
 // Init stores
 const challengeStore = useChallengeStore()
 const playerStore = usePlayerStore()
+const editorStore = useEditorStore()
 // Variables
 const gamePin = ref<string | null>(null)
 const errorMsg = ref<string | null>(null)
@@ -53,6 +55,7 @@ async function findChallengeId() {
 onBeforeMount(() => {
   challengeStore.$reset()
   playerStore.$reset()
+  editorStore.$reset()
 })
 </script>
 
