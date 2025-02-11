@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 // Monaco
 import * as monaco from 'monaco-editor'
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
@@ -39,15 +39,9 @@ const editorStore = useEditorStore()
 // Variables
 let editor: monaco.editor.IStandaloneCodeEditor | null = null
 const container = ref<HTMLElement | null>(null)
-/* const saveTimer = ref('') */
 
 onMounted(() => {
   initMonacoEditor()
-})
-
-onBeforeUnmount(() => {
-  /* saveValueToStore() */
-  /* clearTimeout(saveTimer.value) */
 })
 
 function initMonacoEditor() {
@@ -66,39 +60,17 @@ function initMonacoEditor() {
     if (model) {
       model.onDidChangeContent(() => {
         emit('comboUpdate')
+        autoSave()
       })
     }
   }
 }
 
-function saveValueToStore() {
+function autoSave() {
   if (editor) {
-    console.log('editorValue', editor.getValue())
     editorStore.setValue(editor.getValue())
   }
-
-  /*  const storeEditorValueObject = editorValuesStore.getEditorValueById(id)
-  if (storeEditorValueObject.value !== editor.getValue()) {
-    editorValuesStore.updateEditorValues(id, editor.getValue())
-  }
-  clearTimeout(saveTimer.value)
-  saveTimer.value = setTimeout(saveValueToStore, 1000) */
 }
-
-/* function resetEditor() {
-  editor.setValue(defaultValue)
-  editorValuesStore.setEditorValues(id, defaultValue)
-} */
-
-/* watch(
-  () => editorValuesStore.getResetEditorValue,
-  function () {
-    if (editorValuesStore.resetEditorValue) {
-      resetEditor()
-      editorValuesStore.updateResetEditorValue(false)
-    }
-  },
-) */
 </script>
 
 <style scoped>
