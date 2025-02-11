@@ -12,6 +12,7 @@ import Reference from '@/components/ReferenceComponent.vue'
 import Instructions from '@/components/InstructionsComponent.vue'
 import MonacoEditor from '@/components/MonacoEditor.vue'
 import Combo from '@/components/ComboComponent.vue'
+import ResultViewer from '@/components/ResultViewer.vue'
 // Stores
 import { useChallengeStore } from '@/stores/challenge'
 import { usePlayerStore } from '@/stores/player'
@@ -147,7 +148,7 @@ onBeforeMount(() => {
       <div class="button-container">
         <Reference />
         <Instructions ref="instructions" @close-instructions="startTimer" />
-        <!-- <ResultViewer v-if="challenge.practice" :challengeID="challenge.id" /> -->
+        <ResultViewer v-if="challengeStore.challenge?.field_game_pin === 'PRACTICE'" />
         <!-- <FinishedConfirmation
         ref="finishedConfirmation"
         v-if="!challenge.practice"
