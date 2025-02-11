@@ -55,7 +55,10 @@ async function setPlayerInfo() {
   <div v-if="challengeStore.challenge?.field_game_mode.name === 'Conference mode'">
     <div class="flex">
       <div class="info">
-        <div v-html="challengeStore.challenge?.field_introduction_text.processed"></div>
+        <div
+          v-if="challengeStore.challenge?.field_introduction_text"
+          v-html="challengeStore.challenge?.field_introduction_text.processed"
+        ></div>
         <p>PS! You only have {{ challengeStore.challenge?.field_time }} minutes.</p>
       </div>
       <span class="errorMsg" v-if="errorMsg">
@@ -93,7 +96,10 @@ async function setPlayerInfo() {
   <div v-else-if="challengeStore.challenge?.field_game_mode.name === 'Multiplayer mode'">
     <div class="flex">
       <div class="info">
-        <div v-html="challengeStore.challenge?.field_introduction_text.processed"></div>
+        <div
+          v-if="challengeStore.challenge?.field_introduction_text"
+          v-html="challengeStore.challenge?.field_introduction_text.processed"
+        ></div>
         <p>PS! You only have {{ challengeStore.challenge?.field_time }} minutes.</p>
       </div>
       <span class="errorMsg" v-if="errorMsg">

@@ -9,23 +9,18 @@ const challengeStore = useChallengeStore()
 // Emits
 const emit = defineEmits(['close-instructions'])
 // Variables
-const APIURL = import.meta.env.VITE_API_URL
+const APIURL: string = import.meta.env.VITE_API_URL
 const firstTimeInstructions = ref<boolean>(false)
-const instructionsContainer = ref<HTMLElement | null>(null)
+const showInstructions = ref<boolean>(false)
 
 function show() {
-  if (instructionsContainer.value) {
-    instructionsContainer.value.style.display = 'block'
-  }
+  showInstructions.value = true
 }
 
 function close() {
-  if (instructionsContainer.value) {
-    instructionsContainer.value.style.display = 'none'
-  }
+  showInstructions.value = false
   if (firstTimeInstructions.value) {
     emit('close-instructions')
-
     firstTimeInstructions.value = false
   }
 }
@@ -52,34 +47,36 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="instructionsContainer" class="instructions">
-    <div v-if="!firstTimeInstructions" class="blocker" :onClick="close"></div>
-    <div class="wrapper">
-      <div class="content">
-        <div v-html="challengeStore.challenge?.field_instructions.processed" class="text"></div>
-        <div class="assets">
-          <h2>Assets</h2>
-          <ul>
-            <li v-for="asset in challengeStore.challenge?.field_assets" :key="asset.id">
-              {{ asset.name }} - {{ APIURL + asset.thumbnail.uri.url }}
-            </li>
-          </ul>
+  <Transition>
+    <div v-if="showInstructions" class="instructions">
+      <div v-if="!firstTimeInstructions" class="blocker" :onClick="close"></div>
+      <div class="wrapper">
+        <div class="content">
+          <div v-html="challengeStore.challenge?.field_instructions.processed" class="text"></div>
+          <div class="assets">
+            <h2>Assets</h2>
+            <ul>
+              <li v-for="asset in challengeStore.challenge?.field_assets" :key="asset.id">
+                {{ asset.name }} - {{ APIURL + asset.thumbnail.uri.url }}
+              </li>
+            </ul>
+          </div>
         </div>
+        <ButtonComponent
+          v-if="firstTimeInstructions"
+          text="START"
+          color="orange"
+          @emitFunction="close"
+        />
+        <ButtonComponent
+          v-if="!firstTimeInstructions"
+          text="Close"
+          color="green"
+          @emitFunction="close"
+        />
       </div>
-      <ButtonComponent
-        v-if="firstTimeInstructions"
-        text="START"
-        color="orange"
-        @emitFunction="close"
-      />
-      <ButtonComponent
-        v-if="!firstTimeInstructions"
-        text="Close"
-        color="green"
-        @emitFunction="close"
-      />
     </div>
-  </div>
+  </Transition>
   <ButtonComponent text="Instructions" color="blue" @emitFunction="show" />
 </template>
 
