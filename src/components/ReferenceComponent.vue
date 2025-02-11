@@ -6,20 +6,16 @@ import { useChallengeStore } from '@/stores/challenge'
 // Init stores
 const challengeStore = useChallengeStore()
 // Variables
-const ReferenceContainer = ref<HTMLElement | null>(null)
 const imageUrl =
   import.meta.env.VITE_API_URL + challengeStore.challenge?.field_reference_image.thumbnail.uri.url
+const showReference = ref<boolean>(false)
 
 function show() {
-  if (ReferenceContainer.value) {
-    ReferenceContainer.value.style.display = 'block'
-  }
+  showReference.value = true
 }
 
 function close() {
-  if (ReferenceContainer.value) {
-    ReferenceContainer.value.style.display = 'none'
-  }
+  showReference.value = false
 }
 
 function escapeHandler(e: KeyboardEvent) {
@@ -38,20 +34,21 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="ReferenceContainer" class="reference" :onClick="close">
-    <div class="wrapper">
-      <span class="close" :onClick="close">Close</span>
-      <div class="content">
-        <img :src="imageUrl" alt="Reference image" />
+  <Transition>
+    <div v-if="showReference" class="reference" :onClick="close">
+      <div class="wrapper">
+        <span class="close" :onClick="close">Close</span>
+        <div class="content">
+          <img :src="imageUrl" alt="Reference image" />
+        </div>
       </div>
     </div>
-  </div>
+  </Transition>
   <img class="smallReference" :onclick="show" :src="imageUrl" alt="Reference image" />
 </template>
 
 <style scoped>
 .reference {
-  display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;

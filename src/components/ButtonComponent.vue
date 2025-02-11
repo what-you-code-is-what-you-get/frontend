@@ -50,7 +50,7 @@ button {
   &.blue {
     background-color: var(--color-bv-blue);
     border: 6px solid var(--color-bv-blue);
-    color: var(--color-text-color);
+    color: var(--color-bv-green);
     &:hover,
     &:focus {
       background-color: var(--color-dark-gray);
