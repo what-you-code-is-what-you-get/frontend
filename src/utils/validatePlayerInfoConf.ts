@@ -5,44 +5,44 @@ const challengeStore = useChallengeStore()
 
 export async function validatePlayerInfoConf(
   name: string,
-  phoneNumber: string,
   email: string,
+  phoneNumber: string,
   privacyPolicyChecked: boolean,
 ) {
-  let nameValid = false
-  let emailValid = false
-  let phoneNumberValid = false
-  let privacyPolicyValid = false
+  /*  let isNameValid = false */
+  let isEmailValid = false
+  /*   let isPhoneNumberValid = false
+  let isPrivacyPolicyValid = false */
 
-  if (name) {
-    nameValid = true
-  } else {
-    nameValid = false
+  // TODO: https://www.rootstrap.com/blog/how-to-implement-form-validation-with-vuelidate-in-a-vite-vue-project
+
+  const errorObj: { [key: string]: string } = {}
+
+  if (!name) {
+    errorObj.name = 'Name is required'
   }
 
   if (challengeStore.challenge?.field_email_checkbox) {
     if (email) {
-      emailValid = true
+      const regex = /^[a-zA-Z0-9._%+-æøåÆØÅ]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+      isEmailValid = regex.test(email)
+      if (!isEmailValid) {
+        errorObj.email = 'Invalid email format'
+      }
+    } else {
+      errorObj.email = 'Email is required'
     }
-  } else {
-    emailValid = true
   }
 
   if (challengeStore.challenge?.field_phone_checkbox) {
-    if (phoneNumber) {
-      phoneNumberValid = true
+    if (!phoneNumber) {
+      errorObj.phoneNumber = 'Phone number is required'
     }
-  } else {
-    phoneNumberValid = true
   }
 
-  if (privacyPolicyChecked) {
-    privacyPolicyValid = true
+  if (!privacyPolicyChecked) {
+    errorObj.privacyPolicy = 'Privacy policy must be accepted'
   }
 
-  if (nameValid && emailValid && phoneNumberValid && privacyPolicyValid) {
-    return true
-  } else {
-    return false
-  }
+  return errorObj
 }

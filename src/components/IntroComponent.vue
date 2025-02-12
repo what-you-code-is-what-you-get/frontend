@@ -16,28 +16,32 @@ const name = ref<string>('')
 const email = ref<string>('')
 const phoneNumber = ref<string>('')
 const privacyPolicyChecked = ref<boolean>(false)
-const errorMsg = ref<string | null>(null)
-const formValid = ref<boolean>(false)
+/* const errorMsg = ref<string | null>(null) */
+const formErrorObj = ref<{ [key: string]: string }>({})
 
 async function startGame() {
   if (challengeStore.challenge?.field_game_mode.name === 'Conference mode') {
-    formValid.value = await validatePlayerInfoConf(
+    formErrorObj.value = await validatePlayerInfoConf(
       name.value,
       email.value,
       phoneNumber.value,
       privacyPolicyChecked.value,
     )
   }
+
   if (challengeStore.challenge?.field_game_mode.name === 'Multiplayer mode') {
-    formValid.value = name.value.length > 0
+    if (name.value.length! > 0) {
+      formErrorObj.value = { name: 'Name is required' }
+    } else {
+      formErrorObj.value = {}
+    }
   }
 
-  if (!formValid.value) {
-    errorMsg.value = 'Please fill out all required fields'
-    return
+  if (Object.keys(formErrorObj.value).length === 0) {
+    console.log('Start game')
+
+    await setPlayerInfo()
   }
-  errorMsg.value = null
-  await setPlayerInfo()
 }
 
 async function setPlayerInfo() {
@@ -61,21 +65,29 @@ async function setPlayerInfo() {
         ></div>
         <p>PS! You only have {{ challengeStore.challenge?.field_time }} minutes.</p>
       </div>
-      <span class="errorMsg" v-if="errorMsg">
+      <!-- <span class="errorMsg" v-if="errorMsg">
         {{ errorMsg }}<span class="required-star">*</span>
-      </span>
+      </span> -->
       <div class="wrapper">
         <label for="name">Name<span class="required-star">*</span></label>
+        <span class="formError" v-if="formErrorObj.name">{{ formErrorObj.name }}</span>
         <input type="text" name="Game pin" v-model="name" required />
         <div v-if="challengeStore.challenge?.field_email_checkbox">
           <label for="email">Email<span class="required-star">*</span></label>
+          <span class="formError" v-if="formErrorObj.email">{{ formErrorObj.email }}</span>
           <input type="email" name="Game pin" v-model="email" required />
         </div>
         <div v-if="challengeStore.challenge?.field_phone_checkbox">
           <label for="phone">Phone<span class="required-star">*</span></label>
+          <span class="formError" v-if="formErrorObj.phoneNumber">{{
+            formErrorObj.phoneNumber
+          }}</span>
           <input type="tel" name="Game pin" v-model="phoneNumber" required />
         </div>
 
+        <span class="formError" v-if="formErrorObj.privacyPolicy">{{
+          formErrorObj.privacyPolicy
+        }}</span>
         <label class="container privacy-policy">
           <p>
             <span class="required-star">*</span>
@@ -102,11 +114,12 @@ async function setPlayerInfo() {
         ></div>
         <p>PS! You only have {{ challengeStore.challenge?.field_time }} minutes.</p>
       </div>
-      <span class="errorMsg" v-if="errorMsg">
+      <!-- <span class="errorMsg" v-if="errorMsg">
         {{ errorMsg }}<span class="required-star">*</span>
-      </span>
+      </span> -->
       <div class="wrapper">
         <label for="name">Name<span class="required-star">*</span></label>
+        <span class="formError" v-if="formErrorObj.name">{{ formErrorObj.name }}</span>
         <input type="text" name="Game pin" v-model="name" required />
 
         <ButtonComponent text="START" color="orange" @emitFunction="startGame" />
@@ -170,6 +183,10 @@ input[type='checkbox'] {
   border: 2px solid var(--color-bv-orange);
   color: var(--color-bv-orange);
   cursor: pointer;
+}
+
+.formError {
+  color: var(--color-bv-orange);
 }
 
 .errorMsg {
