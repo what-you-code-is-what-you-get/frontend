@@ -28,6 +28,15 @@ watch(
 </template>
 
 <style scoped>
+@keyframes grow {
+  0% {
+    animation-timing-function: ease-out;
+  }
+  50% {
+    transform: scale(1.3);
+    animation-timing-function: ease-in;
+  }
+}
 .combo {
   color: var(--color-bv-green);
   font-family: 'Press Start 2P', cursive;
@@ -47,16 +56,6 @@ watch(
   }
   .bump {
     animation: grow 0.25s both;
-  }
-
-  @keyframes grow {
-    0% {
-      animation-timing-function: ease-out;
-    }
-    50% {
-      transform: scale(1.3);
-      animation-timing-function: ease-in;
-    }
   }
 }
 </style>
