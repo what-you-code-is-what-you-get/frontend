@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { onBeforeMount, ref, computed } from 'vue'
+import { onBeforeMount, ref, computed, onMounted } from 'vue'
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
 // Utils
 import { client } from '@/utils/client.ts'
@@ -30,6 +30,7 @@ const finishedTimer = ref<boolean>(false)
 const timeLeft = ref<number>(0)
 const combo = ref<number>(0)
 const comboTimer = ref<number>(0)
+const finishedConfirmation = ref(null)
 
 const formattedTime = computed(() => {
   if (timeLeft.value < 60) {
@@ -42,6 +43,7 @@ const formattedTime = computed(() => {
 })
 
 const startTimer = () => {
+  timeLeft.value = (challengeStore.challenge?.field_time || 0) * 60
   countdown()
 }
 
@@ -62,9 +64,9 @@ const isPulsating = computed(() => timeLeft.value < 30)
 
 const timeUp = () => {
   console.log('Time is up!')
-  /* if (finishedConfirmation.value && finishedConfirmation.value.showResult) {
+  if (finishedConfirmation.value && finishedConfirmation.value.showResult) {
     finishedConfirmation.value.showResult()
-  } */
+  }
 }
 
 const stopTimer = () => {
@@ -110,7 +112,6 @@ async function getChallengeById(id: string) {
 onBeforeMount(() => {
   const challengeId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
   getChallengeById(challengeId)
-  timeLeft.value = challengeStore.challenge?.field_time || 0
 })
 </script>
 <template>
@@ -161,6 +162,17 @@ onBeforeMount(() => {
   </main>
 </template>
 <style scoped>
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 header {
   align-items: center;
   display: flex;
@@ -204,18 +216,6 @@ header {
       font-size: 3.5em;
       color: var(--color-bv-orange);
       animation: pulse 1s infinite;
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.1);
-      }
-      100% {
-        transform: scale(1);
-      }
     }
   }
 
