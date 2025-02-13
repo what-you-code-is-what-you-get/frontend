@@ -10,8 +10,8 @@ const challengeStore = useChallengeStore()
 const emit = defineEmits(['close-instructions'])
 // Variables
 const APIURL: string = import.meta.env.VITE_API_URL
-const firstTimeInstructions = ref<boolean>(false)
-const showInstructions = ref<boolean>(false)
+const firstTimeInstructions = ref<boolean>(true)
+const showInstructions = ref<boolean>(true)
 
 function show() {
   showInstructions.value = true
