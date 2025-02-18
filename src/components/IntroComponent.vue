@@ -30,7 +30,7 @@ async function startGame() {
   }
 
   if (challengeStore.challenge?.field_game_mode.name === 'Multiplayer mode') {
-    if (name.value.length! > 0) {
+    if (!name.value) {
       formErrorObj.value = { name: 'Name is required' }
     } else {
       formErrorObj.value = {}
