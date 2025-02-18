@@ -30,6 +30,22 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('@/views/PrivacyPolicyView.vue'),
     },
+    {
+      path: '/vote/',
+      name: 'Vote',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('@/views/VoteView.vue'),
+    },
+    {
+      path: '/vote/:id',
+      name: 'Vote challenge',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('@/views/VoteChallengeView.vue'),
+    },
   ],
 })
 
