@@ -94,7 +94,7 @@ async function setPlayerInfo() {
             I agree that my personal data will be stored until the competition has ended. The
             information will only be used to contact you as a potential winner of the competition.
             <br />
-            <RouterLink to="/privacy-policy" target="_blank">Privacy Policy</RouterLink>
+            <RouterLink :to="{ name: 'privacypolicy' }" target="_blank">Privacy Policy</RouterLink>
           </p>
           <input type="checkbox" id="checkbox" v-model="privacyPolicyChecked" required />
           <span class="checkmark"></span>

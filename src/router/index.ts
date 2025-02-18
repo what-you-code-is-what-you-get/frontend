@@ -11,12 +11,12 @@ const router = createRouter({
     },
     {
       path: '/:pathMatch(.*)*',
-      name: 'NotFound',
+      name: 'notfound',
       component: () => import('@/views/NotFoundView.vue'),
     },
     {
       path: '/challenge/:id',
-      name: 'Challenge',
+      name: 'challenge',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -24,7 +24,7 @@ const router = createRouter({
     },
     {
       path: '/privacy-policy',
-      name: 'Privacy policy',
+      name: 'privacypolicy',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -32,7 +32,7 @@ const router = createRouter({
     },
     {
       path: '/vote/',
-      name: 'Vote',
+      name: 'vote',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -40,7 +40,7 @@ const router = createRouter({
     },
     {
       path: '/vote/:id',
-      name: 'Vote challenge',
+      name: 'votechallenge',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.

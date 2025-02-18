@@ -28,7 +28,7 @@ async function findChallengeId() {
       if (challenge.length > 0) {
         if (challenge) {
           router.push({
-            name: 'Vote challenge',
+            name: 'votechallenge',
             params: { id: challenge[0].id },
           })
         }
