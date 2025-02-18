@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+// @ts-expect-error: GridLoader does not have TypeScript definitions
 import GridLoader from 'vue-spinner/src/GridLoader.vue'
 import { useRouter } from 'vue-router'
 // Utils

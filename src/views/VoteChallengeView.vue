@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import router from '@/router'
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
+// @ts-expect-error: GridLoader does not have TypeScript definitions
 import GridLoader from 'vue-spinner/src/GridLoader.vue'
 // Utils
 import { client } from '@/utils/client.ts'
