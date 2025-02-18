@@ -19,7 +19,6 @@ import { useChallengeStore } from '@/stores/challenge'
 import { usePlayerStore } from '@/stores/player'
 
 const route = useRoute()
-const apiParams = new DrupalJsonApiParams()
 // Init stores
 const challengeStore = useChallengeStore()
 const playerStore = usePlayerStore()
@@ -82,6 +81,7 @@ const comboUpdate = () => {
 }
 
 async function getChallengeById(id: string) {
+  const apiParams = new DrupalJsonApiParams()
   const queryString = apiParams
     .addInclude([
       'field_reference_image.thumbnail',
