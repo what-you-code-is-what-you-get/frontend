@@ -23,7 +23,7 @@ const router = createRouter({
       component: () => import('@/views/ChallengeView.vue'),
     },
     {
-      path: '/privacy-policy',
+      path: '/privacypolicy',
       name: 'privacypolicy',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
