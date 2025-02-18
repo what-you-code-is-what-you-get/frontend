@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { onBeforeMount, ref, computed, onMounted } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
 // Utils
 import { client } from '@/utils/client.ts'
@@ -29,7 +29,8 @@ const finishedTimer = ref<boolean>(false)
 const timeLeft = ref<number>(0)
 const combo = ref<number>(0)
 const comboTimer = ref<number>(0)
-const finishedConfirmation = ref(null)
+import type FinishedConfirmationComponent from '@/components/FinishedConfirmation.vue'
+const finishedConfirmation = ref<InstanceType<typeof FinishedConfirmationComponent> | null>(null)
 
 const formattedTime = computed(() => {
   if (timeLeft.value < 60) {
