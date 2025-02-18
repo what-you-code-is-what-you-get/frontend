@@ -27,6 +27,7 @@ const showResultContainer = ref<boolean>(false)
 const savedDataToDB = ref<boolean>(false)
 const score = ref<number>(0)
 const loadingScore = ref<boolean>(true)
+const isLoading = ref<boolean>(false)
 const imageUrl =
   import.meta.env.VITE_API_URL + challengeStore.challenge?.field_reference_image.thumbnail.uri.url
 const color = '#79fe9d'
@@ -37,6 +38,7 @@ function showConfirmation() {
 }
 
 async function showResult() {
+  isLoading.value = true
   if (challengeStore.challenge?.field_game_mode.name === 'Conference mode') {
     emit('stop-timer')
     showResultContainer.value = true
@@ -61,7 +63,9 @@ function close() {
 
 async function reset() {
   close()
-  router.push('/')
+  router.push({
+    name: 'home',
+  })
 }
 
 async function getScore() {
@@ -106,6 +110,8 @@ async function save() {
     console.error('Save submission error:', error)
     errorMsg.value = (error as Error).message
     return false
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -144,6 +150,9 @@ defineExpose({
       <p>This will send in your code and wipe the editor clean.</p>
       <p>Are you sure you want to do this?</p>
       <span class="errorMsg" v-if="errorMsg">{{ errorMsg }}</span>
+      <div v-if="isLoading" class="loading">
+        <grid-loader :loading="isLoading" :color="color" :size="size"> </grid-loader>
+      </div>
       <div class="buttons">
         <ButtonComponent text="Cancel" color="orange" @emitFunction="close" />
         <ButtonComponent text="Yes!" color="orange" @emitFunction="showResult" />
@@ -284,5 +293,11 @@ defineExpose({
   margin-top: 5px;
   margin-bottom: 5px;
   text-align: center;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
 }
 </style>

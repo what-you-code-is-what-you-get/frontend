@@ -99,7 +99,9 @@ async function vote(vote_id: string) {
 
     if (responseBody) {
       localStorage.setItem(localStorageName, true.toString())
-      router.push('/vote')
+      router.push({
+        name: 'vote',
+      })
     } else {
       throw new Error('Failed to vote.')
     }

@@ -38,7 +38,7 @@ async function findChallengeId() {
       if (challenge.length > 0) {
         if (challenge) {
           router.push({
-            name: 'Challenge',
+            name: 'challenge',
             params: { id: challenge[0].id },
           })
         }
