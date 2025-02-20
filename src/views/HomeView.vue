@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, onMounted } from 'vue'
 import router from '@/router'
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params'
 // Utils
@@ -21,6 +21,7 @@ const editorStore = useEditorStore()
 const gamePin = ref<string | null>(null)
 const errorMsg = ref<string | null>(null)
 const loading = ref<boolean>(false)
+const rememberGamePin = ref<boolean>(false)
 
 async function findChallengeId() {
   if (gamePin.value) {
@@ -36,6 +37,11 @@ async function findChallengeId() {
       })
 
       if (challenge.length > 0) {
+        if (rememberGamePin.value) {
+          localStorage.setItem('gamePin', gamePin.value)
+        } else {
+          localStorage.removeItem('gamePin')
+        }
         if (challenge) {
           router.push({
             name: 'challenge',
@@ -57,6 +63,13 @@ onBeforeMount(() => {
   playerStore.$reset()
   editorStore.$reset()
 })
+
+onMounted(() => {
+  if (localStorage.getItem('gamePin')) {
+    gamePin.value = localStorage.getItem('gamePin')
+    rememberGamePin.value = true
+  }
+})
 </script>
 
 <template>
@@ -73,7 +86,11 @@ onBeforeMount(() => {
       <div class="wrapper">
         <label for="GamePin">Game pin</label>
         <input type="text" placeholder="000000" name="Game pin" v-model="gamePin" autofocus />
-        <!-- TODO: add remember Game pin checkbox and save to localstorage and retrive and autofill if  -->
+        <label class="container rememberGamePin">
+          <p>Remember Game pin</p>
+          <input type="checkbox" id="checkbox" v-model="rememberGamePin" required />
+          <span class="checkmark"></span>
+        </label>
         <div v-if="loading" class="loading">Loading...</div>
         <span class="errorMsg" v-if="errorMsg">{{ errorMsg }}</span>
 
@@ -146,5 +163,79 @@ label {
 .loading {
   font-size: var(--step-2);
   color: var(--color-bv-green);
+}
+
+/* The container */
+.container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border: 2px solid var(--color-bv-orange);
+}
+
+.privacy-policy .checkmark {
+  top: 10px;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: var(--color-bv-orange);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 </style>
