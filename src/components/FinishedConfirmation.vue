@@ -69,7 +69,11 @@ async function reset() {
 }
 
 async function getScore() {
-  await fetchData('https://imagecompare.prototyp.io/api/wyciwyg', editorStore.value)
+  const data = {
+    code: editorStore.value,
+    reference: imageUrl,
+  }
+  await fetchData('https://imagecompare.prototyp.io/api/wyciwyg', data)
     .then((data) => {
       score.value = data.score
       loadingScore.value = false
@@ -119,14 +123,19 @@ interface FetchDataResponse {
   score: number
 }
 
-const fetchData = async (url: string, data: string): Promise<FetchDataResponse> => {
+interface FetchData {
+  code: string
+  reference: string
+}
+
+const fetchData = async (url: string, data: FetchData): Promise<FetchDataResponse> => {
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'text/plain',
+        'Content-Type': 'application/json',
       },
-      body: data,
+      body: JSON.stringify(data),
     })
     if (!response.ok) {
       console.log(response)
